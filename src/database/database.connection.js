@@ -12,4 +12,5 @@ if (process.env.NODE_ENV === "production") {
     configDatabase.ssl = true;
 }
 
-export const db = new Pool(configDatabase);
+const db = new Pool(configDatabase);
+export default db;
