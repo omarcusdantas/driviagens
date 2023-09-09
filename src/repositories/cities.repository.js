@@ -4,10 +4,15 @@ async function insert(name) {
     return await db.query("INSERT INTO cities (name) VALUES ($1)", [name]);
 }
 
-async function getByName(name) {
+async function selectByName(name) {
     const result = await db.query("SELECT * FROM cities WHERE name = $1", [name]);
     return result.rows[0];
 }
 
-const citiesRepository = { insert, getByName };
+async function selectById(id) {
+    const result = await db.query("SELECT * FROM cities WHERE id = $1", [id]);
+    return result.rows[0];
+}
+
+const citiesRepository = { insert, selectByName, selectById };
 export default citiesRepository;
