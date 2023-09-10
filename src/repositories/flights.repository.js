@@ -33,13 +33,13 @@ async function select(origin, destination, smallDateFormated, bigDateFormated, p
 
     if (destination) {
         query += query.includes("WHERE") ? ` AND` : ` WHERE`;
-        query += `destination.name = $${queryParams.length + 1})`;
+        query += ` destination.name = $${queryParams.length + 1}`;
         queryParams.push(destination);
     }
 
     if (smallDateFormated && bigDateFormated) {
         query += query.includes("WHERE") ? ` AND` : ` WHERE`;
-        query += ` flights.date BETWEEN $${queryParams.length} AND $${queryParams.length + 1}`;
+        query += ` flights.date BETWEEN TO_DATE($${queryParams.length+1}, 'YYYY-MM-DD') AND TO_DATE($${queryParams.length + 2}, 'YYYY-MM-DD')`;
         queryParams.push(smallDateFormated, bigDateFormated);
     }
 
@@ -49,9 +49,12 @@ async function select(origin, destination, smallDateFormated, bigDateFormated, p
         const limit = 10;
         const offset = (page - 1) * limit;
 
-        query += ` OFFSET $${queryParams.length} LIMIT $${queryParams.length + 1}`;
+        query += ` OFFSET $${queryParams.length + 1} LIMIT $${queryParams.length + 2}`;
         queryParams.push(offset, limit);
     }
+
+    console.log(query);
+    console.log(queryParams);
 
     const flights = await db.query(query, queryParams);
     return flights.rows;

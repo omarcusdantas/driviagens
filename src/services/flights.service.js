@@ -28,13 +28,17 @@ function checkDates(smallDate, bigDate) {
     }
 
     const smallDateFormated = smallDate.split("-").reverse().join("-");
-    const biggerDateFormated = bigDate.split("-").reverse().join("-");
-    if (new Date(smallDateFormated) > new Date(biggerDateFormated)) {
+    const bigDateFormated = bigDate.split("-").reverse().join("-");
+
+    if (new Date(smallDateFormated) > new Date(bigDateFormated)) {
         throw { type: "unprocessable", message: "Smaller date cannot be greater than bigger date" };
     }
 }
 
 async function retrieve(origin, destination, smallDate, bigDate, page) {
+    const smallDateFormated = smallDate?.split("-").reverse().join("-");
+    const bigDateFormated = bigDate?.split("-").reverse().join("-");
+
     if ((smallDate && !bigDate) || (!smallDate && bigDate)) {
         throw { type: "unprocessable", message: "Smaller date and bigger date must be passed together" };
     } else if (smallDate && bigDate) {

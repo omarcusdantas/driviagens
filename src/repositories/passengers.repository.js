@@ -13,9 +13,9 @@ async function selectFlightsPerPessengers(name, page) {
     let query = `
         SELECT 
             (passengers."firstName" || ' ' || passengers."lastName") AS passenger, 
-            COUNT(travels."passengerId") AS travels
+            CAST(COUNT(travels."passengerId") AS INTEGER) AS travels
         FROM passengers
-        JOIN travels ON passengers.id = travels."passengerId" 
+        LEFT JOIN travels ON passengers.id = travels."passengerId" 
     `;
     const queryParams = [];
 
@@ -33,7 +33,7 @@ async function selectFlightsPerPessengers(name, page) {
         const limit = 10;
         const offset = (page - 1) * limit;
 
-        query += ` OFFSET $${queryParams.length} LIMIT $${queryParams.length + 1}`;
+        query += ` OFFSET $${queryParams.length + 1} LIMIT $${queryParams.length + 2}`;
         queryParams.push(offset, limit);
     }
 
