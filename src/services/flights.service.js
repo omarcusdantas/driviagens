@@ -2,10 +2,6 @@ import flightsRepository from "../repositories/flights.repository.js";
 import { isValidCity, isInvalidDateQuery } from "../utils/validations.js";
 
 async function create(origin, destination, date) {
-    if (origin === destination) {
-        throw { type: "conflit", message: "Origin and destination cannot be the same" };
-    }
-
     const isValidOrigin = await isValidCity(origin);
     const isValidDestination = await isValidCity(destination);
 
@@ -13,7 +9,16 @@ async function create(origin, destination, date) {
         throw { type: "notFound", message: "Invalid id for cities" };
     }
 
-    return await flightsRepository.insert(origin, destination, date);
+    if (origin === destination) {
+        throw { type: "conflict", message: "Origin and destination cannot be the same" };
+    }
+
+    const dateFormated = date.split("-").reverse().join("-");
+    if (new Date(dateFormated) < new Date()) {
+        throw { type: "unprocessable", message: "Date cannot be in the past" };
+    }
+
+    return await flightsRepository.insert(origin, destination, dateFormated);
 }
 
 function checkDates(smallDate, bigDate) {

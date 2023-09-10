@@ -4,7 +4,7 @@ export default function errorHandler(error, req, res, next) {
     console.log(error);
     
     switch(error.type) {
-        case "conflit":
+        case "conflict":
             return res.status(httpStatus.CONFLICT).send(error.message);
         case "notFound":
             return res.status(httpStatus.NOT_FOUND).send(error.message);
