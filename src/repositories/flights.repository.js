@@ -28,21 +28,23 @@ async function select(origin, destination, smallDateFormated, bigDateFormated, p
     const queryParams = [];
 
     if (origin) {
-        query += `WHERE origin.name = $${queryParams.length + 1}`;
+        query += ` WHERE origin.name = $${queryParams.length + 1}`;
         queryParams.push(origin);
     }
 
     if (destination) {
-        query += query.includes("WHERE") ? `AND` : `WHERE`;
+        query += query.includes("WHERE") ? ` AND` : ` WHERE`;
         query += `destination.name = $${queryParams.length + 1})`;
         queryParams.push(destination);
     }
 
     if (smallDateFormated && bigDateFormated) {
-        query += query.includes("WHERE") ? `AND` : `WHERE`;
-        query += `flights.date BETWEEN $${queryParams.length} AND $${queryParams.length + 1}`;
+        query += query.includes("WHERE") ? ` AND` : ` WHERE`;
+        query += ` flights.date BETWEEN $${queryParams.length} AND $${queryParams.length + 1}`;
         queryParams.push(smallDateFormated, bigDateFormated);
     }
+
+    query += ` ORDER BY flights.date`;
 
     if (page) {
         const limit = 10;
@@ -52,7 +54,6 @@ async function select(origin, destination, smallDateFormated, bigDateFormated, p
         queryParams.push(offset, limit);
     }
 
-    query += `ORDER BY flights.date`;
     const flights = await db.query(query, queryParams);
     return flights.rows;
 }

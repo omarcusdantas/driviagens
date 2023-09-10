@@ -7,7 +7,13 @@ async function register(req, res) {
     res.sendStatus(httpStatus.CREATED);
 }
 
+async function get(req, res) {
+    const { name, page } = req.query;
+    const flightsPerPassenger = await passengersService.retrieveFlightsPerPassengers(name, page);
+    res.status(httpStatus.OK).send(flightsPerPassenger);
+}
+
 export const passengersController = {
-    register
+    register, get
 }
 export default passengersController;
