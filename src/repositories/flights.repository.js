@@ -9,5 +9,10 @@ async function insert(origin, destination, date) {
     ]);
 }
 
-const flightsRepository = { insert };
+async function selectById(id) {
+    const result = await db.query("SELECT * FROM flights WHERE id = $1", [id]);
+    return result.rows[0];
+}
+
+const flightsRepository = { insert, selectById };
 export default flightsRepository;
